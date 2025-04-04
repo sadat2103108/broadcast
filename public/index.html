@@ -3,100 +3,29 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Messenger Chat</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 0;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: flex-start;
-            height: 100vh;
-            background-color: #f4f6f9;
-        }
-        #chat-container {
-            display: flex;
-            flex-direction: column;
-            justify-content: flex-end;
-            align-items: center;
-            width: 100%;
-            max-width: 400px;
-            height: 80%;
-            margin-top: 20px;
-            padding: 10px;
-            overflow-y: auto;
-        }
-        #messages {
-            list-style-type: none;
-            padding: 0;
-            margin: 0;
-            width: 100%;
-            max-height: 400px;
-            overflow-y: scroll;
-        }
-        .message-box {
-            background-color: white;
-            border-radius: 10px;
-            padding: 10px;
-            margin-bottom: 10px;
-            width: fit-content;
-            max-width: 80%;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-        }
-        .message-box p {
-            margin: 0;
-        }
-        .message-box .username {
-            font-weight: bold;
-            font-size: 14px;
-            color: #333;
-        }
-        .message-box .message-text {
-            font-size: 16px;
-            color: #555;
-        }
-        #message-input, #name-input {
-            width: 100%;
-            max-width: 400px;
-            padding: 10px;
-            margin-top: 10px;
-            border-radius: 20px;
-            border: 1px solid #ddd;
-            font-size: 16px;
-        }
-        #name-input {
-            margin-bottom: 10px;
-        }
-        .button {
-            padding: 10px;
-            margin-top: 10px;
-            font-size: 16px;
-            background-color: #4CAF50;
-            color: white;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            width: 100%;
-            max-width: 400px;
-        }
-        .button:disabled {
-            background-color: #ccc;
-            cursor: not-allowed;
-        }
-    </style>
+    <title>Broadcast</title>
+    <link rel="stylesheet" href="light.css">
 </head>
 <body>
-    <h1>Messenger Chat</h1>
-    <div id="user-id">Please enter your name:</div>
-    <input id="name-input" type="text" placeholder="Enter your name..." />
-    <button id="set-name-btn" class="button">Set Name</button>
+    <h1>Broadcast</h1>
+
+    <!-- <div id="user-id"></div>  -->
+
+    <!-- Name input and button in one line -->
+    <div class="input-container">
+        <input id="name-input" type="text" placeholder="Enter your name..." />
+        <button id="set-name-btn" class="button">set</button>
+    </div>
+
     <div id="chat-container">
         <ul id="messages"></ul>
     </div>
-    <input id="message-input" type="text" placeholder="Type a message..." />
-    <button id="send-message-btn" class="button">Send Message</button>
+
+    <!-- Message input and button in one line -->
+    <div class="input-container">
+        <input id="message-input" type="text" placeholder="Type a message..." />
+        <button id="send-message-btn" class="button">Send</button>
+    </div>
 
     <script src="/socket.io/socket.io.js"></script>
     <script>
@@ -112,18 +41,18 @@
         let userName = '';
 
         // Listen for the user ID sent by the server
-        socket.on('user id', function(id){
+        socket.on('user id', function(id) {
             userId = id;
-            userIdDisplay.textContent = 'Your User ID: ' + userId;
+            userIdDisplay.textContent = 'User ID: ' + userId;
         });
 
         // Listen for the user's name
-        socket.on('user name', function(name){
+        socket.on('user name', function(name) {
             userName = name;
             userIdDisplay.textContent = 'Your name: ' + userName; // Show user's name
         });
 
-        // Set the user's name when they input it or click the button
+        // Function to set user's name
         const setUserName = () => {
             if (nameInput.value.trim() !== '') {
                 userName = nameInput.value.trim();
@@ -134,8 +63,8 @@
             }
         };
 
-        // Set the user's name on Enter key or button click
-        nameInput.addEventListener('keydown', function(event){
+        // Set user's name on Enter key or button click
+        nameInput.addEventListener('keydown', (event) => {
             if (event.key === 'Enter') {
                 setUserName();
             }
@@ -143,7 +72,7 @@
         setNameButton.addEventListener('click', setUserName);
 
         // Listen for incoming chat messages
-        socket.on('chat message', function({ userName, msg }){
+        socket.on('chat message', function({ userName, msg }) {
             const li = document.createElement('li');
             li.classList.add('message-box');
             li.innerHTML = `
@@ -154,7 +83,7 @@
             messagesList.scrollTop = messagesList.scrollHeight; // Auto scroll to the latest message
         });
 
-        // Send message when user types and presses Enter or clicks the send button
+        // Function to send message
         const sendMessage = () => {
             if (messageInput.value.trim() !== '') {
                 socket.emit('chat message', messageInput.value.trim());
@@ -163,7 +92,7 @@
         };
 
         // Send message on Enter key or button click
-        messageInput.addEventListener('keydown', function(event){
+        messageInput.addEventListener('keydown', (event) => {
             if (event.key === 'Enter') {
                 sendMessage();
             }

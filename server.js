@@ -11,7 +11,7 @@ app.use(express.static('public'));
 
 io.on('connection', (socket) => {
     // Generate a unique user ID for each connection
-    const userId = nanoid();
+    const userId = nanoid(4);
     let userName = '';
 
     console.log(`User connected: ${userId}`);
