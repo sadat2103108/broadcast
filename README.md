@@ -14,7 +14,7 @@ A simple public messaging app where anyone can post and see messages in real-tim
 
 1. Clone the repository:
    ```bash
-   git clone <your-repo-url>
+   git clone https://github.com/sadat2103108/broadcast.git
 
 2. Install dependencies:
 
